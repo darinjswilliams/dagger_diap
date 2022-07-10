@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import com.techyourchance.dagger2course.questions.FetchQuestionUseCase
 import com.techyourchance.dagger2course.questions.Question
+import com.techyourchance.dagger2course.screens.common.dialogs.DialogsNavigator
 import com.techyourchance.dagger2course.screens.common.dialogs.ServerErrorDialogFragment
 import com.techyourchance.dagger2course.screens.questiondetails.QuestionDetailsActivity
 import kotlinx.coroutines.*
@@ -20,6 +21,8 @@ class QuestionsListActivity : AppCompatActivity(),
 
     private var isDataLoaded = false
 
+    private lateinit var dialogsNavigator: DialogsNavigator
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -28,6 +31,8 @@ class QuestionsListActivity : AppCompatActivity(),
         setContentView(viewMvc.rootView)
 
         fetchQuestionUseCase = FetchQuestionUseCase()
+
+        dialogsNavigator = DialogsNavigator(supportFragmentManager)
     }
 
     override fun onStart() {
@@ -64,7 +69,7 @@ class QuestionsListActivity : AppCompatActivity(),
             val result = fetchQuestionUseCase.fetchLatestQuestions()
 
             try {
-                when(result){
+                when (result) {
                     is FetchQuestionUseCase.Result.Success -> {
                         viewMvc.bindQuestions(result.questions)
                         isDataLoaded = true
@@ -82,9 +87,7 @@ class QuestionsListActivity : AppCompatActivity(),
     }
 
     private fun onFetchFailed() {
-        supportFragmentManager.beginTransaction()
-            .add(ServerErrorDialogFragment.newInstance(), null)
-            .commitAllowingStateLoss()
+        dialogsNavigator.showServerErrorDialog()
     }
 
 
