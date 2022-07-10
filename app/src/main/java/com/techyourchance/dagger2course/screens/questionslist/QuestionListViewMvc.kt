@@ -5,16 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.annotation.IdRes
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.techyourchance.dagger2course.R
 import com.techyourchance.dagger2course.questions.Question
+import com.techyourchance.dagger2course.screens.common.viewmvc.BaseViewMvc
 
 class QuestionListViewMvc(
-    private  val layoutInflater: LayoutInflater,
+    private val layoutInflater: LayoutInflater,
     private val parent: ViewGroup?
+) : BaseViewMvc<QuestionListViewMvc.Listener>(
+    layoutInflater,
+    parent,
+    R.layout.layout_questions_list
 ) {
     interface Listener {
         fun onRefreshClicked()
@@ -25,13 +29,6 @@ class QuestionListViewMvc(
     private var recyclerView: RecyclerView
     private var questionsAdapter: QuestionsAdapter
 
-    val rootView: View = layoutInflater.inflate(R.layout.layout_questions_list, parent, false)
-
-    private val context: Context get() = rootView.context
-
-    //Listeners
-    private val listeners = HashSet<Listener>()
-
     init {
 
         // init pull-down-to-refresh
@@ -41,6 +38,7 @@ class QuestionListViewMvc(
             listeners.forEach {
                 it.onRefreshClicked()
             }
+
         }
 
 
@@ -56,16 +54,8 @@ class QuestionListViewMvc(
         recyclerView.adapter = questionsAdapter
     }
 
-    //Listeners
-    fun registerListener(listener: Listener) {
-        listeners.add(listener)
-    }
 
-    fun unregisterListener(listener: Listener) {
-        listeners.remove(listener)
-    }
-
-   fun showProgressIndication() {
+    fun showProgressIndication() {
         swipeRefresh.isRefreshing = true
     }
 
@@ -77,10 +67,6 @@ class QuestionListViewMvc(
 
     fun bindQuestions(questions: List<Question>) {
         questionsAdapter.bindData(questions)
-    }
-
-    private fun <T : View?> findViewById(@IdRes id: Int): T {
-        return rootView.findViewById<T>(id)
     }
 
     class QuestionsAdapter(
