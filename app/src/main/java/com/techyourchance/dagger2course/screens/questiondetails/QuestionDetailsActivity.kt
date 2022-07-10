@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import com.techyourchance.dagger2course.questions.FetchQuestionDetailUseCase
 import com.techyourchance.dagger2course.questions.FetchQuestionUseCase
+import com.techyourchance.dagger2course.screens.common.ScreensNavigator
 import com.techyourchance.dagger2course.screens.common.dialogs.DialogsNavigator
 import com.techyourchance.dagger2course.screens.common.dialogs.ServerErrorDialogFragment
 import kotlinx.coroutines.*
@@ -23,6 +24,8 @@ class QuestionDetailsActivity : AppCompatActivity(), QuestionDetailsViewMvc.List
 
     private lateinit var dialogsNavigator: DialogsNavigator
 
+    private lateinit var screensNavigator: ScreensNavigator
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -34,6 +37,8 @@ class QuestionDetailsActivity : AppCompatActivity(), QuestionDetailsViewMvc.List
         questionId = intent.extras!!.getString(EXTRA_QUESTION_ID)!!
 
         dialogsNavigator = DialogsNavigator(supportFragmentManager)
+
+        screensNavigator = ScreensNavigator(this)
     }
 
     override fun onStart() {
@@ -55,11 +60,12 @@ class QuestionDetailsActivity : AppCompatActivity(), QuestionDetailsViewMvc.List
 
             try {
 
-                when(result){
-                    is FetchQuestionDetailUseCase.Result.Success ->{
-                       viewMvc.bindQuestionBody(result.question.body)
-                    } else -> {
-                    onFetchFailed()
+                when (result) {
+                    is FetchQuestionDetailUseCase.Result.Success -> {
+                        viewMvc.bindQuestionBody(result.question.body)
+                    }
+                    else -> {
+                        onFetchFailed()
                     }
                 }
 
@@ -74,7 +80,7 @@ class QuestionDetailsActivity : AppCompatActivity(), QuestionDetailsViewMvc.List
     }
 
     override fun onBackClicked() {
-        onBackPressed()
+        screensNavigator.navigateBack()
     }
 
     companion object {
