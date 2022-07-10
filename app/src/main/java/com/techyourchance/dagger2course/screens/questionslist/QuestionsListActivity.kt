@@ -3,15 +3,11 @@ package com.techyourchance.dagger2course.screens.questionslist
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
-import com.techyourchance.dagger2course.Constants
-import com.techyourchance.dagger2course.networking.StackoverflowApi
 import com.techyourchance.dagger2course.questions.FetchQuestionUseCase
 import com.techyourchance.dagger2course.questions.Question
 import com.techyourchance.dagger2course.screens.common.dialogs.ServerErrorDialogFragment
 import com.techyourchance.dagger2course.screens.questiondetails.QuestionDetailsActivity
 import kotlinx.coroutines.*
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class QuestionsListActivity : AppCompatActivity(),
     QuestionListViewMvc.Listener {
@@ -74,7 +70,9 @@ class QuestionsListActivity : AppCompatActivity(),
                         isDataLoaded = true
                     }
 
-                    is FetchQuestionUseCase.Result.Failure -> onFetchFailed()
+                    else -> {
+                        onFetchFailed()
+                    }
                 }
             } finally {
                 viewMvc.hideProgressIndication()

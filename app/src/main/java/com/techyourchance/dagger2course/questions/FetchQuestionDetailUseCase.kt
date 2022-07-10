@@ -8,12 +8,10 @@ import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class FetchQuestionUseCase : FetchQuestionDetailUseCase() {
+open class FetchQuestionDetailUseCase {
 
-    //Why sealed class, for success your passing back data, for Failure
-    //no data is being return
     sealed class Result {
-        class Success(val questions: List<Question>) : Result()
+        class Success(val question: QuestionWithBody) : Result()
         object Failure : Result()
     }
 
@@ -24,14 +22,15 @@ class FetchQuestionUseCase : FetchQuestionDetailUseCase() {
 
     private val stackoverflowApi: StackoverflowApi = retrofit.create(StackoverflowApi::class.java)
 
-    suspend fun fetchLatestQuestions(): Result {
+
+    suspend fun fetchQuestionDetail(questionId: String): Result {
         return withContext(Dispatchers.IO) {
+            val response = stackoverflowApi.questionDetails(questionId)
+
             try {
 
-                val response = stackoverflowApi.lastActiveQuestions(20)
-
                 if (response.isSuccessful && response.body() != null) {
-                    return@withContext Result.Success(response.body()!!.questions)
+                    return@withContext Result.Success(response.body()!!.question)
 
                 } else {
                     return@withContext Result.Failure
@@ -39,11 +38,11 @@ class FetchQuestionUseCase : FetchQuestionDetailUseCase() {
             } catch (t: Throwable) {
                 if (t !is CancellationException) {
                     return@withContext Result.Failure
+
                 } else {
                     throw t
                 }
             }
         }
     }
-
 }
