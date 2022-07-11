@@ -34,10 +34,7 @@ class QuestionsListActivity : AppCompatActivity(),
 
         setContentView(viewMvc.rootView)
 
-        //Note how we are getting once instance of retrofit from application class
-        //since the application class is consider a global object, it will only be instantiate once
-
-        fetchQuestionUseCase = FetchQuestionUseCase((application as MyApplication).stackoverflowApi)
+        fetchQuestionUseCase = (application as MyApplication).fetchQuestionsUseCase
 
         dialogsNavigator = DialogsNavigator(supportFragmentManager)
 
