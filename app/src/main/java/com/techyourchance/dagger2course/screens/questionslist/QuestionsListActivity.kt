@@ -3,6 +3,7 @@ package com.techyourchance.dagger2course.screens.questionslist
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
+import com.techyourchance.dagger2course.MyApplication
 import com.techyourchance.dagger2course.questions.FetchQuestionUseCase
 import com.techyourchance.dagger2course.questions.Question
 import com.techyourchance.dagger2course.screens.common.ScreensNavigator
@@ -33,11 +34,15 @@ class QuestionsListActivity : AppCompatActivity(),
 
         setContentView(viewMvc.rootView)
 
-        fetchQuestionUseCase = FetchQuestionUseCase()
+        //Note how we are getting once instance of retrofit from application class
+        //since the application class is consider a global object, it will only be instantiate once
+
+        fetchQuestionUseCase = FetchQuestionUseCase((application as MyApplication).stackoverflowApi)
 
         dialogsNavigator = DialogsNavigator(supportFragmentManager)
 
         screensNavigator = ScreensNavigator(this)
+
     }
 
     override fun onStart() {
