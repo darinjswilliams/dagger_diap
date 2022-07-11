@@ -31,7 +31,7 @@ class QuestionDetailsActivity : AppCompatActivity(), QuestionDetailsViewMvc.List
         viewMvc = QuestionDetailsViewMvc(LayoutInflater.from(this), null)
         setContentView(viewMvc.rootView)
 
-        fetchQuestionDetailUseCase = FetchQuestionDetailUseCase((application as MyApplication).stackoverflowApi)
+        fetchQuestionDetailUseCase = (application as MyApplication).fetchQuestionDetailUseCase
 
         questionId = intent.extras!!.getString(EXTRA_QUESTION_ID)!!
 
