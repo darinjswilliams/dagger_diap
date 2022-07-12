@@ -37,9 +37,9 @@ class QuestionsListActivity : BaseActivity(),
 
         fetchQuestionUseCase = compositionRoot.fetchQuestionsUseCase
 
-        dialogsNavigator = DialogsNavigator(supportFragmentManager)
+        dialogsNavigator = compositionRoot.dialogsNavigator
 
-        screensNavigator = ScreensNavigator(this)
+        screensNavigator = compositionRoot.screensNavigator
 
     }
 

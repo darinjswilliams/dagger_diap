@@ -13,8 +13,8 @@ import com.techyourchance.dagger2course.questions.Question
 import com.techyourchance.dagger2course.screens.common.viewmvc.BaseViewMvc
 
 class QuestionListViewMvc(
-    private val layoutInflater: LayoutInflater,
-    private val parent: ViewGroup?
+    layoutInflater: LayoutInflater,
+    parent: ViewGroup?
 ) : BaseViewMvc<QuestionListViewMvc.Listener>(
     layoutInflater,
     parent,
