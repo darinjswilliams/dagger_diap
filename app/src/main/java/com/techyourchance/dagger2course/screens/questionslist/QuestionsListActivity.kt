@@ -1,16 +1,13 @@
 package com.techyourchance.dagger2course.screens.questionslist
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import androidx.appcompat.app.AppCompatActivity
-import com.techyourchance.dagger2course.MyApplication
+import com.techyourchance.dagger2course.common.dependencyinjection.Service
 import com.techyourchance.dagger2course.questions.FetchQuestionUseCase
 import com.techyourchance.dagger2course.questions.Question
 import com.techyourchance.dagger2course.screens.common.ScreensNavigator
 import com.techyourchance.dagger2course.screens.common.activities.BaseActivity
 import com.techyourchance.dagger2course.screens.common.dialogs.DialogsNavigator
-import com.techyourchance.dagger2course.screens.common.dialogs.ServerErrorDialogFragment
-import com.techyourchance.dagger2course.screens.questiondetails.QuestionDetailsActivity
+import com.techyourchance.dagger2course.screens.common.viewmvc.ViewMvcFactory
 import kotlinx.coroutines.*
 
 class QuestionsListActivity : BaseActivity(),
@@ -18,28 +15,25 @@ class QuestionsListActivity : BaseActivity(),
 
     private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
+    //user java reflection
     private lateinit var viewMvc: QuestionListViewMvc
 
-    private lateinit var fetchQuestionUseCase: FetchQuestionUseCase
+    @field:Service private lateinit var fetchQuestionUseCase: FetchQuestionUseCase
 
     private var isDataLoaded = false
 
-    private lateinit var dialogsNavigator: DialogsNavigator
+    @field:Service private lateinit var dialogsNavigator: DialogsNavigator
 
-    private lateinit var screensNavigator: ScreensNavigator
+    @field:Service private lateinit var screensNavigator: ScreensNavigator
+
+    @field:Service private lateinit var viewMvcFactory: ViewMvcFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        injector.inject(this)
         super.onCreate(savedInstanceState)
 
-        viewMvc = compositionRoot.viewMvcFactory.newQuestionListViewMvc(null)
-
+        viewMvc = viewMvcFactory.newQuestionListViewMvc(null)
         setContentView(viewMvc.rootView)
-
-        fetchQuestionUseCase = compositionRoot.fetchQuestionsUseCase
-
-        dialogsNavigator = compositionRoot.dialogsNavigator
-
-        screensNavigator = compositionRoot.screensNavigator
 
     }
 

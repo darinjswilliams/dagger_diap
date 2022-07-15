@@ -14,7 +14,7 @@ class FetchQuestionUseCase(
     //Why sealed class, for success your passing back data, for Failure
     //no data is being return
     sealed class Result {
-        class Success(val questions: List<Question>) : Result()
+       data class Success(val questions: List<Question>) : Result()
         object Failure : Result()
     }
 
